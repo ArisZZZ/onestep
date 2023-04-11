@@ -1,13 +1,13 @@
 package database
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type DataInfo struct {
@@ -18,7 +18,7 @@ type DataInfo struct {
 	Dbname   string `json:"dbname"`
 }
 
-var DB *gorm.DB
+var DB *Queries
 
 func Connect() {
 	var dataInfo DataInfo
@@ -26,18 +26,18 @@ func Connect() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	err = json.Unmarshal(jsonData, &dataInfo)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	connStr := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		dataInfo.User, dataInfo.Password, dataInfo.Host, dataInfo.Port, dataInfo.Dbname)
-	db, err := gorm.Open(mysql.Open(connStr), &gorm.Config{})
+
+	db, err := sql.Open("mysql", connStr)
 	if err != nil {
 		log.Fatal(err)
 	}
-	DB = db
+	DB = New(db)
+
 	log.Println("✨: Connect database success")
 }

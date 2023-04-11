@@ -1,0 +1,7 @@
+version: 1
+packages:
+  - path: "internal/database"
+    name: "database"
+    engine: "mysql"
+    schema: "internal/sqlc/schema.sql"
+    queries: "internal/sqlc/query.sql"

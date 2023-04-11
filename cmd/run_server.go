@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -18,6 +19,12 @@ func RunServer(){
 		"message": "pong",
 	  })
 	})
+
+	r.POST("/user", func(c *gin.Context) {
+		fmt.Println("进入啦")
+		database.DB.CreateUser(c, "test")
+	  })
+
 
 	r.Run()
 
